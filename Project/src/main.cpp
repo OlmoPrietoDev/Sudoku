@@ -1,10 +1,9 @@
 #include <iostream>
-
-#include <SFML/Graphics.hpp>
+using namespace std;
 
 int main() {
-  printf("Hello, World!\n");
+  
+  cout << "hola mundo hola!!" << endl;
 
-  getchar();
   return 0;
 }
