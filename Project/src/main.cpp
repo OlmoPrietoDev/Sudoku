@@ -1,10 +1,19 @@
 #include <iostream>
 
-#include <SFML/Graphics.hpp>
+#include "renderer.h"
 
 int main() {
   printf("Hello, World!\n");
 
-  getchar();
+  Renderer* renderer = Renderer::getInstance();
+  renderer->init();
+
+  while (renderer->isOpen()) {
+    renderer->getInput();
+    renderer->render();
+  }
+
+  renderer->end();
+
   return 0;
 }
