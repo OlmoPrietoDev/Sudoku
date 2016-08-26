@@ -1,19 +1,8 @@
 #include <iostream>
 #include "../include/Grid.h"
 using namespace std;
-#include "renderer.h"
 
 int main() {
-
-  Renderer* renderer = Renderer::getInstance();
-  renderer->init();
-
-  while (renderer->isOpen()) {
-    renderer->getInput();
-    renderer->render();
-  }
-
-  renderer->end();
 
   Grid * grid = new Grid();
 
@@ -24,6 +13,17 @@ int main() {
   grid->getMatrixPosition(20,x,y);
 
   cout << x << y << endl;
+
+  grid->insertNumber(10, 5);
+  grid->insertNumber(11, 5);
+  grid->insertNumber(19, 5);
+
+  grid->insertNumber(30, 6);
+  grid->insertNumber(50, 7);
+
+  grid->printGrid();
+
+  delete grid;
 
   return 0;
 }
