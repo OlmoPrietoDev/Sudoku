@@ -11,11 +11,6 @@ int main() {
   Grid * grid = new Grid();
   renderer->setGrid(grid);
 
-  while (renderer->isOpen()) {
-    renderer->getInput();
-    renderer->render();
-  }
-  
   cout << grid->getLinealPosition(2, 2) << endl;
 
   short x, y;
@@ -23,7 +18,7 @@ int main() {
   grid->getMatrixPosition(20, x, y);
 
   cout << x << y << endl;
-  
+
   grid->insertNumber(10, 5);
   grid->insertNumber(11, 5);
   grid->insertNumber(19, 5);
@@ -33,8 +28,13 @@ int main() {
 
   grid->printGrid();
 
-  delete grid;
+  while (renderer->isOpen()) {
+    renderer->getInput();
+    renderer->render();
+  }
 
+
+  delete grid;
   renderer->end();
   
   return 0;

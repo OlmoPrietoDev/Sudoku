@@ -40,8 +40,10 @@ private:
   uint32 m_number_offset_x;
   uint32 m_number_offset_y;
   uint32 m_number_gap;
-  short m_selected_box;
   Grid* m_grid_ref;
+  short m_selected_box;
+  short m_incorrect_box;
+  bool m_incorrect_number;
   sf::RenderWindow m_window;
   sf::Sprite m_grid;
   sf::Texture m_grid_texture;

@@ -21,7 +21,10 @@ Renderer::Renderer() {
   m_grid_box_size = 59;
   m_number_offset_x = 23;
   m_number_offset_y = 10;
+  m_grid_ref = nullptr;
   m_selected_box = 100;
+  m_incorrect_box = 100;
+  m_incorrect_number = false;
 
   m_font.loadFromFile("resources/arial.ttf");
 
@@ -108,6 +111,35 @@ void Renderer::getInput() {
       m_debug_text.setString(mouse_pos_s);
 
       m_selected_box = x_pos + m_width * y_pos;
+    } else {
+      m_selected_box = 100;
+    }
+  }
+
+  if (m_selected_box < 100) {
+    short number = 0;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+      number = 1;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+      number = 2;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
+      number = 3;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
+      number = 4;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5)) {
+      number = 5;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num6)) {
+      number = 6;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num7)) {
+      number = 7;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num8)) {
+      number = 8;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) {
+      number = 9;
+    }
+
+    if (number != 0) {
+      m_incorrect_number = !m_grid_ref->insertNumber(m_selected_box, number);
     }
   }
 }
@@ -138,6 +170,11 @@ void Renderer::render() {
       short number = m_grid_ref->getCellNumber(m_grid_ref->getLinealPosition(j, i));
       std::string tmp = std::to_string(number);
       text.setString(tmp);
+      if (m_grid_ref->isCellFixed(m_grid_ref->getLinealPosition(j, i)) == true) {
+        text.setColor(sf::Color::Yellow);
+      } else {
+        text.setColor(sf::Color(180, 180, 180, 255));
+      }
       text.setPosition(m_grid_offset_x + m_grid_box_size * j + m_number_offset_x,
         m_grid_offset_y + m_grid_box_size * i + m_number_offset_y);
 
