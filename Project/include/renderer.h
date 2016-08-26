@@ -30,12 +30,17 @@ private:
 
   uint32 m_width;
   uint32 m_height;
-  sf::RenderWindow m_window;
-  sf::Sprite m_grid;
-  sf::Texture m_grid_texture;
   uint32 m_grid_offset_x;
   uint32 m_grid_offset_y;
   uint32 m_grid_box_size;
+  uint32 m_number_offset_x;
+  uint32 m_number_offset_y;
+  uint32 m_number_gap;
+  sf::RenderWindow m_window;
+  sf::Sprite m_grid;
+  sf::Texture m_grid_texture;
+  sf::Font m_font;
+  sf::Text m_debug_text;
 };
 
 #endif // __RENDERER_H__

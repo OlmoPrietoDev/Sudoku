@@ -1,4 +1,5 @@
 #include "renderer.h"
+
 #include <cassert>
 
 /*uint32 Renderer::m_width = 0;
@@ -18,6 +19,16 @@ Renderer::Renderer() {
   m_grid_offset_x = 220;
   m_grid_offset_y = 112;
   m_grid_box_size = 59;
+  m_number_offset_x = 23;
+  m_number_offset_y = 10;
+
+  m_font.loadFromFile("resources/arial.ttf");
+
+  m_debug_text.setFont(m_font);
+  m_debug_text.setString("");
+  m_debug_text.setColor(sf::Color::White);
+  m_debug_text.setCharacterSize(30);
+  m_debug_text.setPosition(25, 100);
 }
 
 Renderer::~Renderer() {
@@ -64,12 +75,52 @@ void Renderer::getInput() {
       m_window.close();
     }
   }
+
+  // Debug for mouse position
+  sf::Vector2i mouse_pos = sf::Mouse::getPosition(m_window);
+  std::string mouse_pos_s = "x: " + std::to_string(mouse_pos.x) + "\ny: "
+    + std::to_string(mouse_pos.y);
+  m_debug_text.setString(mouse_pos_s);
+  //
+
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+    uint32 x_pos = mouse_pos.x;
+    x_pos -= m_grid_offset_x;
+    while (x_pos % m_grid_box_size != 0) {
+      x_pos--;
+    }
+    x_pos /= m_grid_box_size;
+
+    uint32 y_pos = mouse_pos.y;
+    y_pos -= m_grid_offset_y;
+    while (y_pos % m_grid_box_size != 0) {
+      y_pos--;
+    }
+    y_pos /= m_grid_box_size;
+
+    if (x_pos < 9 && y_pos < 9) {
+      std::string tmp = "\n\nx_box: " + std::to_string(x_pos) 
+        + "\ny_box: " + std::to_string(y_pos);
+      mouse_pos_s += tmp;
+      m_debug_text.setString(mouse_pos_s);
+    }
+  }
 }
 
 void Renderer::render() {
   m_window.clear();
 
   m_window.draw(m_grid);
+
+  sf::Text text("1", m_font);
+  text.setCharacterSize(35);
+  text.setStyle(sf::Text::Bold);
+  text.setColor(sf::Color::White);
+  text.setPosition(m_grid_offset_x + m_grid_box_size * 0 + m_number_offset_x,
+    m_grid_offset_y + m_grid_box_size * 0 + m_number_offset_y);
+  m_window.draw(text);
+
+  m_window.draw(m_debug_text);
 
   m_window.display();
 }
