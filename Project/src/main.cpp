@@ -1,16 +1,21 @@
 #include <iostream>
-#include "../include/Grid.h"
 using namespace std;
+#include "Grid.h"
+#include "renderer.h"
 
 int main() {
 
+  Renderer* renderer = Renderer::getInstance();
+  renderer->init();
+
   Grid * grid = new Grid();
+  renderer->setGrid(grid);
 
-  cout << grid->getLinealPosition(2,2) << endl;
+  cout << grid->getLinealPosition(2, 2) << endl;
 
-  short x,y;
+  short x, y;
 
-  grid->getMatrixPosition(20,x,y);
+  grid->getMatrixPosition(20, x, y);
 
   cout << x << y << endl;
 
@@ -24,7 +29,14 @@ int main() {
 
   grid->printGrid();
 
-  delete grid;
+  while (renderer->isOpen()) {
+    renderer->getInput();
+    renderer->render();
+  }
 
+
+  delete grid;
+  renderer->end();
+  
   return 0;
 }
