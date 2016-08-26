@@ -5,7 +5,14 @@
 *.suo
 *.user
 *.userosscache
+*.sln
 *.sln.docstates
+*.vcxproj
+*.vcxproj.filters
+
+*.bat
+genie.exe
+project_settings.lua
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
