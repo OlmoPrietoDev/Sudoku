@@ -21,6 +21,7 @@ Renderer::Renderer() {
   m_grid_box_size = 59;
   m_number_offset_x = 23;
   m_number_offset_y = 10;
+  m_selected_box = 100;
 
   m_font.loadFromFile("resources/arial.ttf");
 
@@ -32,7 +33,9 @@ Renderer::Renderer() {
 }
 
 Renderer::~Renderer() {
-
+  if (m_instance != nullptr) {
+    delete m_instance;
+  }
 }
 
 Renderer* Renderer::getInstance() {
@@ -103,6 +106,8 @@ void Renderer::getInput() {
         + "\ny_box: " + std::to_string(y_pos);
       mouse_pos_s += tmp;
       m_debug_text.setString(mouse_pos_s);
+
+      m_selected_box = x_pos + m_width * y_pos;
     }
   }
 }
@@ -118,7 +123,27 @@ void Renderer::render() {
   text.setColor(sf::Color::White);
   text.setPosition(m_grid_offset_x + m_grid_box_size * 0 + m_number_offset_x,
     m_grid_offset_y + m_grid_box_size * 0 + m_number_offset_y);
-  m_window.draw(text);
+  //m_window.draw(text);
+
+  text.setString("7");
+  text.setStyle(sf::Text::Regular);
+  text.setColor(sf::Color(180, 180, 180, 255));
+  text.setPosition(m_grid_offset_x + m_grid_box_size * 1 + m_number_offset_x,
+    m_grid_offset_y + m_grid_box_size * 0 + m_number_offset_y);
+  //m_window.draw(text);
+
+
+  for (uint32 i = 0; i < 9; i++) {
+    for (uint32 j = 0; j < 9; j++) {
+      short number = m_grid_ref->getCellNumber(m_grid_ref->getLinealPosition(j, i));
+      std::string tmp = std::to_string(number);
+      text.setString(tmp);
+      text.setPosition(m_grid_offset_x + m_grid_box_size * j + m_number_offset_x,
+        m_grid_offset_y + m_grid_box_size * i + m_number_offset_y);
+
+      m_window.draw(text);
+    }
+  }
 
   m_window.draw(m_debug_text);
 
@@ -131,6 +156,10 @@ uint32 Renderer::getWidth() const {
 
 uint32 Renderer::getHeight() const {
   return m_height;
+}
+
+void Renderer::setGrid(Grid *g) {
+  m_grid_ref = g;
 }
 
 bool Renderer::isOpen() const {

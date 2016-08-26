@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Grid.h"
+
 typedef unsigned int uint32;
 
 class Renderer {
@@ -16,6 +18,8 @@ public:
 
   uint32 getWidth() const;
   uint32 getHeight() const;
+
+  void setGrid(Grid *grid);
   
   bool isOpen() const;
 
@@ -36,6 +40,8 @@ private:
   uint32 m_number_offset_x;
   uint32 m_number_offset_y;
   uint32 m_number_gap;
+  short m_selected_box;
+  Grid* m_grid_ref;
   sf::RenderWindow m_window;
   sf::Sprite m_grid;
   sf::Texture m_grid_texture;
