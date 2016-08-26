@@ -19,6 +19,7 @@ int main() {
   grid->insertNumber(19, 5);
 
   grid->insertNumber(30, 6);
+  grid->insertNumber(40, 6);
   grid->insertNumber(50, 7);
 
   grid->printGrid();

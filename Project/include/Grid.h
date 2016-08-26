@@ -3,6 +3,7 @@
 
 #define NUMBEROFCELLS 81
 #define ROWSIZE 9
+#define SQUARESIZE 3
 
 class Grid {
 
