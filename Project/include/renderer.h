@@ -6,6 +6,7 @@
 #include "Grid.h"
 
 typedef unsigned int uint32;
+typedef unsigned char byte;
 
 class Renderer {
 public:
@@ -46,7 +47,9 @@ private:
   bool m_incorrect_number;
   sf::RenderWindow m_window;
   sf::Sprite m_grid;
+  sf::Sprite m_selected_cell;
   sf::Texture m_grid_texture;
+  sf::Texture m_selected_cell_texture;
   sf::Font m_font;
   sf::Text m_debug_text;
 };

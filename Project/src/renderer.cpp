@@ -19,8 +19,8 @@ Renderer::Renderer() {
   m_grid_offset_x = 220;
   m_grid_offset_y = 112;
   m_grid_box_size = 59;
-  m_number_offset_x = 23;
-  m_number_offset_y = 10;
+  m_number_offset_x = 20;
+  m_number_offset_y = 7;
   m_grid_ref = nullptr;
   m_selected_box = 100;
   m_incorrect_box = 100;
@@ -65,6 +65,26 @@ void Renderer::init(uint32 width, uint32 height) {
 
   m_grid.setTexture(m_grid_texture);
   m_grid.setPosition(m_grid_offset_x, m_grid_offset_y);
+
+  m_selected_cell_texture.create(m_grid_box_size, m_grid_box_size);
+  //byte *data = (byte*)malloc(m_grid_box_size * m_grid_box_size);
+  //for (uint32 i = 0; i < m_grid_box_size; i++) {
+  //  for (uint32 j = 0; j < m_grid_box_size; j++) {
+  //    int p = (j + m_grid_box_size * i) + 4;
+
+  //    data[p] = 32;       // R
+  //    data[p + 1] = 255;  // G
+  //    data[p + 2] = 32;   // B
+  //    data[p + 3] = 255;  // A;
+  //  }
+  //}
+
+  sf::Image image;
+  image.create(m_grid_box_size, m_grid_box_size, sf::Color(85, 162, 10, 255));
+  m_selected_cell_texture.update(image);
+  
+  m_selected_cell.setTexture(m_selected_cell_texture);
+  m_selected_cell.setPosition(10, 10);
 }
 
 void Renderer::end() {
@@ -117,7 +137,7 @@ void Renderer::getInput() {
   }
 
   if (m_selected_box < 100) {
-    short number = 0;
+    short number = 10;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
       number = 1;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
@@ -136,9 +156,11 @@ void Renderer::getInput() {
       number = 8;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) {
       number = 9;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete)) {
+      number = 0;
     }
 
-    if (number != 0) {
+    if (number < 10) {
       m_incorrect_number = !m_grid_ref->insertNumber(m_selected_box, number);
     }
   }
@@ -149,38 +171,81 @@ void Renderer::render() {
 
   m_window.draw(m_grid);
 
+  m_selected_cell.setPosition(m_grid_offset_x + 4, m_grid_offset_y + 4);
+  m_window.draw(m_selected_cell);
+
+  m_grid_offset_x += m_number_offset_x;
+  m_grid_offset_y += m_number_offset_y;
+
   sf::Text text("1", m_font);
   text.setCharacterSize(35);
   text.setStyle(sf::Text::Bold);
-  text.setColor(sf::Color::White);
-  text.setPosition(m_grid_offset_x + m_grid_box_size * 0 + m_number_offset_x,
-    m_grid_offset_y + m_grid_box_size * 0 + m_number_offset_y);
-  //m_window.draw(text);
+  //text.setColor(sf::Color::White);
+  //text.setPosition(m_grid_offset_x + m_grid_box_size * 0 + m_number_offset_x,
+  //  m_grid_offset_y + m_grid_box_size * 0 + m_number_offset_y);
+  ////m_window.draw(text);
 
-  text.setString("7");
-  text.setStyle(sf::Text::Regular);
-  text.setColor(sf::Color(180, 180, 180, 255));
-  text.setPosition(m_grid_offset_x + m_grid_box_size * 1 + m_number_offset_x,
-    m_grid_offset_y + m_grid_box_size * 0 + m_number_offset_y);
-  //m_window.draw(text);
+  //text.setString("7");
+  //text.setStyle(sf::Text::Regular);
+  //text.setColor(sf::Color(180, 180, 180, 255));
+  //text.setPosition(m_grid_offset_x + m_grid_box_size * 1 + m_number_offset_x,
+  //  m_grid_offset_y + m_grid_box_size * 0 + m_number_offset_y);
+  ////m_window.draw(text);
 
-
+  uint32 placed_row = 0;
+  uint32 placed_column = 0;
+  uint32 hor_offset = 0;
+  uint32 ver_offset = 3;
   for (uint32 i = 0; i < 9; i++) {
     for (uint32 j = 0; j < 9; j++) {
       short number = m_grid_ref->getCellNumber(m_grid_ref->getLinealPosition(j, i));
-      std::string tmp = std::to_string(number);
-      text.setString(tmp);
+      //if (number != 0) {
+        std::string tmp = std::to_string(number);
+        text.setString(tmp);
+      //} else {  // number == 0
+      //  text.setString("");
+      //}
       if (m_grid_ref->isCellFixed(m_grid_ref->getLinealPosition(j, i)) == true) {
         text.setColor(sf::Color::Yellow);
       } else {
         text.setColor(sf::Color(180, 180, 180, 255));
       }
-      text.setPosition(m_grid_offset_x + m_grid_box_size * j + m_number_offset_x,
-        m_grid_offset_y + m_grid_box_size * i + m_number_offset_y);
+
+      if (placed_row == 3) {
+        placed_row = 0;
+      }
+      
+      if (placed_row < 1) {
+        hor_offset += 3;
+      } else {
+        hor_offset += 1;
+      }
+
+      placed_row++;
+
+      text.setPosition(m_grid_offset_x + m_grid_box_size * j + hor_offset,
+        m_grid_offset_y + m_grid_box_size * i + ver_offset);
 
       m_window.draw(text);
     }
+
+    if (placed_column == 3) {
+      placed_column = 0;
+    }
+
+    if (placed_column < 1) {
+      ver_offset += 3;
+    } else {
+      ver_offset += 1;
+    }
+
+    placed_column++;
+
+    hor_offset = 0;
   }
+
+  m_grid_offset_x -= m_number_offset_x;
+  m_grid_offset_y -= m_number_offset_y;
 
   m_window.draw(m_debug_text);
 
