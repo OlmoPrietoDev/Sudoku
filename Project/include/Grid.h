@@ -23,7 +23,7 @@ public:
 		int returnCode;
 	};
 
-	Grid();
+	Grid(int typeOfSudoku);
 	~Grid();
 
 	short getLinealPosition(short x, short y);
@@ -31,6 +31,8 @@ public:
 	bool isCellFixed(short linealPosition);
 	short getCellNumber(short linealPosition);
 	bool isTheGameWon();
+
+	void reset();
 
 	MovementReturnValue insertNumber(short linealPosition, short number);
 
