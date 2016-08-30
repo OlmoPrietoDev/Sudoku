@@ -1,4 +1,4 @@
-#include "Grid.h"
+#include "../include/Grid.h"
 #include <iostream>
 
 Grid::Grid() {
@@ -7,10 +7,14 @@ Grid::Grid() {
 
 		gridVector[i].number = 0;
 		gridVector[i].isFixed = false;
+		gridVector[i].isCorrect = true;
 	}
 
 	gridVector[0].number = 8;
 	gridVector[0].isFixed = true;
+
+	numberOfCellsFillCorrectly = 1;
+	haveWeAlreadyWonTheGame = false;
 
 	std::cout << "Generating Sudoku test template" << std::endl;
 }
@@ -32,6 +36,11 @@ bool Grid::isCellFixed(short linealPosition) {
 	return gridVector[linealPosition].isFixed;
 }
 
+bool Grid::isCellCorrect(short linealPosition) {
+
+	return gridVector[linealPosition].isCorrect;
+}
+
 short Grid::getCellNumber(short linealPosition) {
 
 	return gridVector[linealPosition].number;
@@ -40,6 +49,7 @@ short Grid::getCellNumber(short linealPosition) {
 bool Grid::insertNumber(short linealPosition, short number) {
 
 	gridVector[linealPosition].number = number;
+	gridVector[linealPosition].isCorrect = false;
 
 	if (numberRepeatedInRow(linealPosition, number)) {
 
@@ -56,35 +66,24 @@ bool Grid::insertNumber(short linealPosition, short number) {
 		return false;
 	}
 
+	gridVector[linealPosition].isCorrect = true;
+
 	return true;
 }
 
 bool Grid::numberRepeatedInRow(short linealPosition, short number) {
 
-	bool numberRepeated[ROWSIZE];
-
-	for (int i = 0; i < ROWSIZE; i++) {
-
-		numberRepeated[i] = false;
-	}
-
 	short x,y;
 	getMatrixPosition(linealPosition,x,y);
 
-	for (int i = 0; i < ROWSIZE; i++) {
+	for (int i = linealPosition - x; i < (linealPosition - x + ROWSIZE); i++) {
 
-		if (gridVector[getLinealPosition(i,y)].number != 0) {
+		//std::cout << i << std::endl;
 
-			if (numberRepeated[gridVector[getLinealPosition(i,y)].number -1]){
+		if (number == gridVector[i].number && i != linealPosition) {
 
-				std::cout << "repeated in row, position " << i << "," << y << " number " << gridVector[getLinealPosition(i,y)].number << std::endl;
+			std::cout << "repeated in row, position " << i << " number " << gridVector[i].number << std::endl;
 				return true;
-			}
-
-			else {
-
-				numberRepeated[gridVector[getLinealPosition(i,y)].number -1] = true;
-			}
 		}
 	}
 
@@ -93,31 +92,18 @@ bool Grid::numberRepeatedInRow(short linealPosition, short number) {
 
 bool Grid::numberRepeatedInColumn(short linealPosition, short number) {
 
-	bool numberRepeated[ROWSIZE];
-
-	for (int i = 0; i < ROWSIZE; i++) {
-
-		numberRepeated[i] = false;
-	}
-
 	short x,y;
 	getMatrixPosition(linealPosition,x,y);
 
-	for (int i = 0; i < ROWSIZE; i++) {
+	for (int i = x; i <= NUMBEROFCELLS - ROWSIZE + x; i += 9) {
 
-		if (gridVector[getLinealPosition(x,i)].number != 0) {
+		//std::cout << i << std::endl;
 
-			if (numberRepeated[gridVector[getLinealPosition(x,i)].number -1]){
+		if (number == gridVector[i].number && i != linealPosition) {
 
-				std::cout << "repeated in column, position " << x << "," << i << " number ";
-				std::cout << gridVector[getLinealPosition(x,i)].number << std::endl;
-				return true;
-			}
-
-			else {
-
-				numberRepeated[gridVector[getLinealPosition(x,i)].number -1] = true;
-			}
+			std::cout << "repeated in column, position " << i << " number ";
+			std::cout << gridVector[i].number << std::endl;
+			return true;
 		}
 	}
 
@@ -126,37 +112,22 @@ bool Grid::numberRepeatedInColumn(short linealPosition, short number) {
 
 bool Grid::numberRepeatedInSquare(short linealPosition, short number) {
 
-	bool numberRepeated[ROWSIZE];
-
-	for (int i = 0; i < ROWSIZE; i++) {
-
-		numberRepeated[i] = false;
-	}
-
 	short x,y;
 	getMatrixPosition(linealPosition,x,y);
 
 	short bigSquareX = x - (x % SQUARESIZE);
 	short bigSquareY = y - (y % SQUARESIZE);
 
-	std::cout << bigSquareX << bigSquareY << std::endl;
-
 	for (int i = bigSquareX; i < bigSquareX + 3; i++) {
 		for (int j = bigSquareY; j < bigSquareY + 3; j++) {
 
-			if (gridVector[getLinealPosition(i,j)].number != 0) {
+			std::cout << i << j << std::endl;
 
-				if (numberRepeated[gridVector[getLinealPosition(i,j)].number -1]){
+			if (gridVector[getLinealPosition(i,j)].number == number && getLinealPosition(i,j) != linealPosition) {
 
 					std::cout << "repeated in square, position " << i << "," << j << " number ";
 					std::cout << gridVector[getLinealPosition(i,j)].number << std::endl;
 					return true;
-				}
-
-				else {
-
-					numberRepeated[gridVector[getLinealPosition(i,j)].number -1] = true;
-				}
 			}
 		}
 	}
