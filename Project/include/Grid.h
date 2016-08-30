@@ -16,6 +16,7 @@ public:
 	bool isCellFixed(short linealPosition);
 	bool isCellCorrect(short linealPosition);
 	short getCellNumber(short linealPosition);
+	bool isTheGameWon();
 
 	/*
 	* Pre: the number can't be inserted in a fixed cell, the position

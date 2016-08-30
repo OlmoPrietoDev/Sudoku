@@ -3,15 +3,16 @@
 
 Grid::Grid() {
 
-	for (int i = 0; i < 81; i++) {
+	for (int i = 0; i < NUMBEROFCELLS; i++) {
 
 		gridVector[i].number = 0;
 		gridVector[i].isFixed = false;
-		gridVector[i].isCorrect = true;
+		gridVector[i].isCorrect = false;
 	}
 
 	gridVector[0].number = 8;
 	gridVector[0].isFixed = true;
+	gridVector[0].isCorrect = true;
 
 	numberOfCellsFillCorrectly = 1;
 	haveWeAlreadyWonTheGame = false;
@@ -46,6 +47,12 @@ short Grid::getCellNumber(short linealPosition) {
 	return gridVector[linealPosition].number;
 }
 
+bool Grid::isTheGameWon()  {
+
+	return haveWeAlreadyWonTheGame;
+}
+
+// TODO abstraction
 bool Grid::insertNumber(short linealPosition, short number) {
 
 	if (gridVector[linealPosition].isFixed == true) {
@@ -53,8 +60,18 @@ bool Grid::insertNumber(short linealPosition, short number) {
 		return false;
 	}
 
+	if (gridVector[linealPosition].isCorrect == true) {
+
+		numberOfCellsFillCorrectly--;
+	}
+
 	gridVector[linealPosition].number = number;
 	gridVector[linealPosition].isCorrect = false;
+
+	if (number == 0) {
+
+		return false;
+	}
 
 	if (numberRepeatedInRow(linealPosition, number)) {
 
@@ -72,6 +89,12 @@ bool Grid::insertNumber(short linealPosition, short number) {
 	}
 
 	gridVector[linealPosition].isCorrect = true;
+	numberOfCellsFillCorrectly++;
+
+	if (numberOfCellsFillCorrectly == 81) {
+
+		haveWeAlreadyWonTheGame = true;
+	}
 
 	return true;
 }
