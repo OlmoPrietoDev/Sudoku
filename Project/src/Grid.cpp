@@ -61,6 +61,7 @@ Grid::MovementReturnValue Grid::insertNumber(short linealPosition, short number)
 	if (number == 0) {
 
 		mrv.returnCode = DELETEDCELLNUMBER;
+    gridVector[linealPosition].number = number;
 		return mrv;
 	}
 

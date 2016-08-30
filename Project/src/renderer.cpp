@@ -18,13 +18,31 @@ Renderer::Renderer() {
   m_height = 0;
   m_grid_offset_x = 220;
   m_grid_offset_y = 112;
-  m_grid_box_size = 59;
+  m_grid_box_size = 60;
   m_number_offset_x = 20;
   m_number_offset_y = 7;
   m_grid_ref = nullptr;
   m_selected_box = 100;
   m_incorrect_box = 100;
-  m_incorrect_number = false;
+  m_selected_box_size = 60;
+  m_easy_sudoku_x = 20;
+  m_easy_sudoku_y = 120;
+  m_easy_sudoku_width = 120;
+  m_easy_sudoku_height = 50;
+  m_medium_sudoku_x = 20;
+  m_medium_sudoku_y = 175;
+  m_medium_sudoku_width = 120;
+  m_medium_sudoku_height = 50;
+  m_hard_sudoku_x = 20;
+  m_hard_sudoku_y = 230;
+  m_hard_sudoku_width = 120;
+  m_hard_sudoku_height = 50;
+  m_reset_x = 850;
+  m_reset_y = 120;
+  m_reset_width = 100;
+  m_reset_height = 50;
+  m_credits_x = 5;
+  m_credits_y = 750;
 
   m_font.loadFromFile("resources/arial.ttf");
 
@@ -33,6 +51,31 @@ Renderer::Renderer() {
   m_debug_text.setColor(sf::Color::White);
   m_debug_text.setCharacterSize(30);
   m_debug_text.setPosition(25, 100);
+
+  m_easy_sudoku_text.setFont(m_font);
+  m_easy_sudoku_text.setString("EASY");
+  m_easy_sudoku_text.setColor(sf::Color::Black);
+  m_easy_sudoku_text.setPosition(m_easy_sudoku_x + 20, m_easy_sudoku_y + 5);
+
+  m_medium_sudoku_text.setFont(m_font);
+  m_medium_sudoku_text.setString("MEDIUM");
+  m_medium_sudoku_text.setColor(sf::Color::Black);
+  m_medium_sudoku_text.setPosition(m_medium_sudoku_x, m_medium_sudoku_y + 5);
+
+  m_hard_sudoku_text.setFont(m_font);
+  m_hard_sudoku_text.setString("HARD");
+  m_hard_sudoku_text.setColor(sf::Color::Black);
+  m_hard_sudoku_text.setPosition(m_hard_sudoku_x + 20, m_hard_sudoku_y + 5);
+
+  m_reset_text.setFont(m_font);
+  m_reset_text.setColor(sf::Color::Black);
+  m_reset_text.setString("RESET");
+  m_reset_text.setPosition(m_reset_x, m_reset_y + 5);
+
+  m_credits_text.setFont(m_font);
+  m_credits_text.setCharacterSize(13);
+  m_credits_text.setString("Paquito Barco Munoz & Olmo Prieto Sanchez");
+  m_credits_text.setPosition(m_credits_x, m_credits_y);
 }
 
 Renderer::~Renderer() {
@@ -66,25 +109,44 @@ void Renderer::init(uint32 width, uint32 height) {
   m_grid.setTexture(m_grid_texture);
   m_grid.setPosition(m_grid_offset_x, m_grid_offset_y);
 
-  m_selected_cell_texture.create(m_grid_box_size, m_grid_box_size);
-  //byte *data = (byte*)malloc(m_grid_box_size * m_grid_box_size);
-  //for (uint32 i = 0; i < m_grid_box_size; i++) {
-  //  for (uint32 j = 0; j < m_grid_box_size; j++) {
-  //    int p = (j + m_grid_box_size * i) + 4;
-
-  //    data[p] = 32;       // R
-  //    data[p + 1] = 255;  // G
-  //    data[p + 2] = 32;   // B
-  //    data[p + 3] = 255;  // A;
-  //  }
-  //}
-
   sf::Image image;
-  image.create(m_grid_box_size, m_grid_box_size, sf::Color(85, 162, 10, 255));
+  image.create(m_selected_box_size, m_selected_box_size, sf::Color(85, 162, 10, 255));
+  m_selected_cell_texture.create(m_selected_box_size, m_selected_box_size);
   m_selected_cell_texture.update(image);
   
   m_selected_cell.setTexture(m_selected_cell_texture);
-  m_selected_cell.setPosition(10, 10);
+
+  m_error_cell_texture.loadFromFile("resources/error_cell.png");
+  m_error_cell.setTexture(m_error_cell_texture);
+  m_error_cell.setPosition(1000, 1000);
+
+  sf::Image image2;
+  image2.create(m_easy_sudoku_width, m_easy_sudoku_height, sf::Color::Green);
+  m_easy_sudoku_texture.create(m_easy_sudoku_width, m_easy_sudoku_height);
+  m_easy_sudoku_texture.update(image2);
+  m_easy_sudoku.setTexture(m_easy_sudoku_texture);
+  m_easy_sudoku.setPosition(m_easy_sudoku_x, m_easy_sudoku_y);
+
+  sf::Image image3;
+  image3.create(m_medium_sudoku_width, m_medium_sudoku_height, sf::Color::Yellow);
+  m_medium_sudoku_texture.create(m_medium_sudoku_width, m_medium_sudoku_height);
+  m_medium_sudoku_texture.update(image3);
+  m_medium_sudoku.setTexture(m_medium_sudoku_texture);
+  m_medium_sudoku.setPosition(m_medium_sudoku_x, m_medium_sudoku_y);
+
+  sf::Image image4;
+  image4.create(m_hard_sudoku_width, m_hard_sudoku_height, sf::Color::Red);
+  m_hard_sudoku_texture.create(m_hard_sudoku_width, m_hard_sudoku_height);
+  m_hard_sudoku_texture.update(image4);
+  m_hard_sudoku.setTexture(m_hard_sudoku_texture);
+  m_hard_sudoku.setPosition(m_hard_sudoku_x, m_hard_sudoku_y);
+
+  sf::Image image5;
+  image5.create(m_reset_width, m_reset_height, sf::Color::White);
+  m_reset_texture.create(m_reset_width, m_reset_height);
+  m_reset_texture.update(image5);
+  m_reset.setTexture(m_reset_texture);
+  m_reset.setPosition(m_reset_x, m_reset_y);
 }
 
 void Renderer::end() {
@@ -109,6 +171,25 @@ void Renderer::getInput() {
   m_debug_text.setString(mouse_pos_s);
   //
 
+  // Button checking
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+    if (mouse_pos.x > m_easy_sudoku_x && mouse_pos.x < m_easy_sudoku_x + m_easy_sudoku_width
+      && mouse_pos.y > m_easy_sudoku_y && mouse_pos.y < m_easy_sudoku_y + m_easy_sudoku_height) {
+      
+    } else if (mouse_pos.x > m_medium_sudoku_x && mouse_pos.x < m_medium_sudoku_x + m_medium_sudoku_width
+      && mouse_pos.y > m_medium_sudoku_y && mouse_pos.y < m_medium_sudoku_y + m_medium_sudoku_height) {
+      
+    } else if (mouse_pos.x > m_hard_sudoku_x && mouse_pos.x < m_hard_sudoku_x + m_hard_sudoku_width
+      && mouse_pos.y > m_hard_sudoku_y && mouse_pos.y < m_hard_sudoku_y + m_hard_sudoku_height) {
+      
+    } else if (mouse_pos.x > m_reset_x && mouse_pos.x < m_reset_x + m_reset_width
+      && mouse_pos.y > m_reset_y && mouse_pos.y < m_reset_y + m_reset_height) {
+      
+    }
+  }
+  //
+
+  // Cell selection
   if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
     uint32 x_pos = mouse_pos.x;
     x_pos -= m_grid_offset_x;
@@ -135,7 +216,9 @@ void Renderer::getInput() {
       m_selected_box = 100;
     }
   }
+  //
 
+  // Number introduction
   if (m_selected_box < 100) {
     short number = 10;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
@@ -161,9 +244,46 @@ void Renderer::getInput() {
     }
 
     if (number < 10) {
-      m_incorrect_number = !m_grid_ref->insertNumber(m_selected_box, number);
+      m_movement_return_value = m_grid_ref->insertNumber(m_selected_box, number);
+
+      if (m_movement_return_value.returnCode == NUMBERREPEATED) {
+        short new_x, new_y;
+        m_grid_ref->getMatrixPosition(m_movement_return_value.cellID, new_x, new_y);
+
+        uint32 x_off = 0;
+        uint32 y_off = 0;
+
+        short k = 0;
+        while (k <= new_x) {
+          if (k % 3 == 0) {
+            x_off += 3;
+          } else {
+            x_off += 1;
+          }
+
+          k++;
+        }
+
+        k = 0;
+        while (k <= new_y) {
+          if (k % 3 == 0) {
+            y_off += 3;
+          } else {
+            y_off += 1;
+          }
+
+          k++;
+        }
+
+        m_error_cell.setPosition(m_grid_offset_x + m_grid_box_size * new_x + x_off,
+          m_grid_offset_y + m_grid_box_size * new_y + y_off);
+      } else {
+        m_error_cell.setPosition(1000, 1000);
+      }
     }
   }
+  //
+
 }
 
 void Renderer::render() {
@@ -175,8 +295,33 @@ void Renderer::render() {
     short x, y;
     m_grid_ref->getMatrixPosition(m_selected_box, x, y);
 
-    m_selected_cell.setPosition(m_grid_offset_x + m_grid_box_size * x + 4,
-      m_grid_offset_y + m_grid_box_size * y + 4);
+    uint32 x_off = 0;
+    uint32 y_off = 0;
+    
+    short k = 0;
+    while (k <= x) {
+      if (k % 3 == 0) {
+        x_off += 3;
+      } else {
+        x_off += 1;
+      }
+
+      k++;
+    }
+
+    k = 0;
+    while (k <= y) {
+      if (k % 3 == 0) {
+        y_off += 3;
+      } else {
+        y_off += 1;
+      }
+
+      k++;
+    }
+
+    m_selected_cell.setPosition(m_grid_offset_x + m_grid_box_size * x + x_off,
+      m_grid_offset_y + m_grid_box_size * y + y_off);
     
     m_window.draw(m_selected_cell);
   }
@@ -184,20 +329,11 @@ void Renderer::render() {
   m_grid_offset_x += m_number_offset_x;
   m_grid_offset_y += m_number_offset_y;
 
-  sf::Text text("1", m_font);
+  sf::Text text("", m_font);
   text.setCharacterSize(35);
   text.setStyle(sf::Text::Bold);
-  //text.setColor(sf::Color::White);
-  //text.setPosition(m_grid_offset_x + m_grid_box_size * 0 + m_number_offset_x,
-  //  m_grid_offset_y + m_grid_box_size * 0 + m_number_offset_y);
-  ////m_window.draw(text);
 
-  //text.setString("7");
-  //text.setStyle(sf::Text::Regular);
-  //text.setColor(sf::Color(180, 180, 180, 255));
-  //text.setPosition(m_grid_offset_x + m_grid_box_size * 1 + m_number_offset_x,
-  //  m_grid_offset_y + m_grid_box_size * 0 + m_number_offset_y);
-  ////m_window.draw(text);
+  m_window.draw(m_error_cell);
 
   uint32 placed_row = 0;
   uint32 placed_column = 0;
@@ -215,7 +351,7 @@ void Renderer::render() {
       if (m_grid_ref->isCellFixed(m_grid_ref->getLinealPosition(j, i)) == true) {
         text.setColor(sf::Color::Yellow);
       } else {
-        text.setColor(sf::Color(180, 180, 180, 255));
+        text.setColor(sf::Color(200, 200, 200, 255));
       }
 
       if (placed_row == 3) {
@@ -223,7 +359,7 @@ void Renderer::render() {
       }
       
       if (placed_row < 1) {
-        hor_offset += 4;
+        hor_offset += 3;
       } else {
         hor_offset += 1;
       }
@@ -241,7 +377,7 @@ void Renderer::render() {
     }
 
     if (placed_column < 1) {
-      ver_offset += 4;
+      ver_offset += 3;
     } else {
       ver_offset += 1;
     }
@@ -254,7 +390,17 @@ void Renderer::render() {
   m_grid_offset_x -= m_number_offset_x;
   m_grid_offset_y -= m_number_offset_y;
 
-  m_window.draw(m_debug_text);
+  //m_window.draw(m_debug_text);
+
+  m_window.draw(m_easy_sudoku);
+  m_window.draw(m_easy_sudoku_text);
+  m_window.draw(m_medium_sudoku);
+  m_window.draw(m_medium_sudoku_text);
+  m_window.draw(m_hard_sudoku);
+  m_window.draw(m_hard_sudoku_text);
+  m_window.draw(m_reset);
+  m_window.draw(m_reset_text);
+  m_window.draw(m_credits_text);
 
   m_window.display();
 }
