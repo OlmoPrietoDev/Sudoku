@@ -1,21 +1,118 @@
 #include "../include/Grid.h"
 #include <iostream>
 
-Grid::Grid() {
+Grid::Grid(int typeOfSudoku) {
 
-	for (int i = 0; i < NUMBEROFCELLS; i++) {
-
-		gridVector[i].number = 0;
-		gridVector[i].isFixed = false;
-	}
-
-	gridVector[0].number = 8;
-	gridVector[0].isFixed = true;
-
-	numberOfCellsFillCorrectly = 1;
 	haveWeAlreadyWonTheGame = false;
 
-	std::cout << "Generating Sudoku test template" << std::endl;
+	switch (typeOfSudoku) {
+
+		case 0:
+
+		for (int i = 0; i < NUMBEROFCELLS; i++) {
+
+			gridVector[i].number = 0;
+			gridVector[i].isFixed = false;
+		}
+
+		numberOfCellsFillCorrectly = 0;
+		
+		break;
+
+		case 1:
+		{
+		int v[] = {0,0,6,1,5,0,3,0,0,0,0,7,9,3,0,0,0,0,3,2,0,4,7,0,0,0,0,4,0,3,0,0,7,0,0,0,9,0,0,0,1,0,8,0,4,0,0,0,6,0,0,2,0,3,0,0,0,0,0,3,7,8,6,2,0,0,0,0,0,9,4,0,0,0,0,0,9,4,1,0,0};
+		numberOfCellsFillCorrectly = 31;
+
+		for (int i = 0; i < NUMBEROFCELLS; i++) {
+
+			if (v[i] != 0) {
+
+				gridVector[i].isFixed = true;
+			}
+
+			else {
+
+				gridVector[i].isFixed = false;
+			}
+
+			gridVector[i].number = v[i];
+		 }
+
+		break;
+		}
+		case 2:
+		{
+		int v[] = {0,0,0,0,0,7,0,4,0,9,0,0,8,0,0,5,0,7,0,0,3,0,4,0,9,0,0,0,0,1,0,9,0,2,5,4,0,0,0,0,0,0,0,0,0,6,9,5,0,2,0,7,0,0,0,0,9,0,7,0,6,0,0,5,0,6,0,0,3,0,0,9,0,1,0,2,0,0,0,0,0};
+		numberOfCellsFillCorrectly = 28;
+
+		for (int i = 0; i < NUMBEROFCELLS; i++) {
+
+			if (v[i] != 0) {
+
+				gridVector[i].isFixed = true;
+			}
+
+			else {
+
+				gridVector[i].isFixed = false;
+			}
+
+			gridVector[i].number = v[i];
+		 }
+
+		break;
+		}
+
+		case 3:
+		{
+		int v[] = {0,0,0,0,8,0,1,0,0,0,0,3,0,0,0,2,0,4,4,0,0,2,0,0,0,0,7,0,9,0,5,0,0,0,0,0,5,0,0,8,0,3,0,7,1,0,8,4,0,0,0,0,5,6,0,0,7,3,0,0,0,1,0,0,6,9,0,0,1,8,0,0,0,0,0,0,4,0,0,0,0};
+		numberOfCellsFillCorrectly = 27;
+
+		for (int i = 0; i < NUMBEROFCELLS; i++) {
+
+			if (v[i] != 0) {
+
+				gridVector[i].isFixed = true;
+			}
+
+			else {
+
+				gridVector[i].isFixed = false;
+			}
+
+			gridVector[i].number = v[i];
+		 }
+
+		break;
+		}
+
+		case 4:
+		{
+		
+		int v[] = {0,7,2,4,8,9,1,3,5,9,5,3,6,1,7,2,8,4,4,1,8,2,3,5,6,9,7,7,9,1,5,6,4,3,2,8,5,2,6,8,9,3,4,7,1,3,8,4,1,7,2,9,5,6,8,4,7,3,2,6,5,1,9,2,6,9,7,5,1,8,4,3,1,3,5,9,4,8,7,6,2};
+		numberOfCellsFillCorrectly = 80;
+
+		for (int i = 0; i < NUMBEROFCELLS; i++) {
+
+			if (v[i] != 0) {
+
+				gridVector[i].isFixed = true;
+			}
+
+			else {
+
+				gridVector[i].isFixed = false;
+			}
+
+			gridVector[i].number = v[i];
+		 }
+
+		break;
+		}
+	}
+
+	std::cout << "Generating Sudoku template" << std::endl;
 }
 
 short Grid::getLinealPosition(short x, short y) {
@@ -43,6 +140,21 @@ short Grid::getCellNumber(short linealPosition) {
 bool Grid::isTheGameWon()  {
 
 	return haveWeAlreadyWonTheGame;
+}
+
+void Grid::reset() {
+
+	for (int i = 0; i < NUMBEROFCELLS; i++) {
+
+		if (gridVector[i].isFixed == false) {
+			
+			if(gridVector[i].number != 0) {
+
+				numberOfCellsFillCorrectly--;
+				gridVector[i].number = 0;
+			}
+		}
+	}
 }
 
 // TODO abstraction
