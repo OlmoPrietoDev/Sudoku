@@ -3,6 +3,7 @@
 
 #define NUMBEROFCELLS 81
 #define ROWSIZE 9
+#define SQUARESIZE 3
 
 class Grid {
 
@@ -13,7 +14,9 @@ public:
 	short getLinealPosition(short x, short y);
 	void getMatrixPosition(short linealPosition, short &x, short &y);
 	bool isCellFixed(short linealPosition);
+	bool isCellCorrect(short linealPosition);
 	short getCellNumber(short linealPosition);
+	bool isTheGameWon();
 
 	/*
 	* Pre: the number can't be inserted in a fixed cell, the position
@@ -31,9 +34,13 @@ private:
 
 			short number;
 			bool isFixed;
+			bool isCorrect;
 		};
 
 	Cell gridVector[NUMBEROFCELLS];	
+
+	int numberOfCellsFillCorrectly;
+	bool haveWeAlreadyWonTheGame;
 
 	bool numberRepeatedInRow(short linealPosition, short number);	
 	bool numberRepeatedInColumn(short linealPosition, short number);	
