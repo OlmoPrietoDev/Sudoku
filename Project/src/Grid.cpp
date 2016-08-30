@@ -48,6 +48,11 @@ short Grid::getCellNumber(short linealPosition) {
 
 bool Grid::insertNumber(short linealPosition, short number) {
 
+	if (gridVector[linealPosition].isFixed == true) {
+
+		return false;
+	}
+
 	gridVector[linealPosition].number = number;
 	gridVector[linealPosition].isCorrect = false;
 
