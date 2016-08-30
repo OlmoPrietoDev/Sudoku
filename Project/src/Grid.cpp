@@ -112,7 +112,7 @@ Grid::Grid(int typeOfSudoku) {
 		}
 	}
 
-	std::cout << "Generating Sudoku template" << std::endl;
+	//std::cout << "Generating Sudoku template" << std::endl;
 }
 
 short Grid::getLinealPosition(short x, short y) {
@@ -155,6 +155,8 @@ void Grid::reset() {
 			}
 		}
 	}
+
+  haveWeAlreadyWonTheGame = false;
 }
 
 // TODO abstraction
@@ -169,6 +171,11 @@ Grid::MovementReturnValue Grid::insertNumber(short linealPosition, short number)
 		mrv.returnCode = MODIFIEDFIXEDPOSITION;
 		return mrv;
 	}
+
+  if (gridVector[linealPosition].number == number) {
+    mrv.returnCode = UNDEFINED;
+    return mrv;
+  }
 
 	if (number == 0) {
 
@@ -221,7 +228,7 @@ bool Grid::numberRepeatedInRow(short &linealPosition, short number) {
 
 		if (number == gridVector[i].number && i != linealPosition) {
 
-			std::cout << "repeated in row, position " << i << " number " << gridVector[i].number << std::endl;
+			//std::cout << "repeated in row, position " << i << " number " << gridVector[i].number << std::endl;
 			linealPosition = i;
 			return true;
 		}
@@ -241,8 +248,8 @@ bool Grid::numberRepeatedInColumn(short &linealPosition, short number) {
 
 		if (number == gridVector[i].number && i != linealPosition) {
 
-			std::cout << "repeated in column, position " << i << " number ";
-			std::cout << gridVector[i].number << std::endl;
+			//std::cout << "repeated in column, position " << i << " number ";
+			//std::cout << gridVector[i].number << std::endl;
 			linealPosition = i;
 			return true;
 		}
@@ -266,8 +273,8 @@ bool Grid::numberRepeatedInSquare(short &linealPosition, short number) {
 
 			if (gridVector[getLinealPosition(i,j)].number == number && getLinealPosition(i,j) != linealPosition) {
 
-					std::cout << "repeated in square, position " << i << "," << j << " number ";
-					std::cout << gridVector[getLinealPosition(i,j)].number << std::endl;
+					//std::cout << "repeated in square, position " << i << "," << j << " number ";
+					//std::cout << gridVector[getLinealPosition(i,j)].number << std::endl;
 					linealPosition = getLinealPosition(i,j);
 					return true;
 			}
@@ -283,13 +290,13 @@ void Grid::printGrid() {
 
 		if (i % ROWSIZE == 0) {
 
-			std::cout << std::endl;
+			//std::cout << std::endl;
 		}
 
-		std::cout << " " << gridVector[i].number;
+		//std::cout << " " << gridVector[i].number;
 	}
 
-	std::cout << std::endl;
+	//std::cout << std::endl;
 }
 
 Grid::~Grid() {

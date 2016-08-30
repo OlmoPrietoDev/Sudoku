@@ -23,7 +23,7 @@ public:
 		int returnCode;
 	};
 
-	Grid(int typeOfSudoku);
+	Grid(int typeOfSudoku = 0);
 	~Grid();
 
 	short getLinealPosition(short x, short y);

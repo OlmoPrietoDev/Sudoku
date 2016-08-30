@@ -22,15 +22,13 @@ int main() {
 //  grid->insertNumber(70, 7);
 //  grid->insertNumber(80, 7);
 
-  grid->printGrid();
+  //grid->printGrid();
 
   while (renderer->isOpen()) {
     renderer->getInput();
     renderer->render();
   }
 
-
-  delete grid;
   renderer->end();
   
   return 0;

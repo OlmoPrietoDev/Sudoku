@@ -24,6 +24,7 @@ Renderer::Renderer() {
   m_grid_ref = nullptr;
   m_selected_box = 100;
   m_incorrect_box = 100;
+  m_game_won = false;
   m_selected_box_size = 60;
   m_easy_sudoku_x = 20;
   m_easy_sudoku_y = 120;
@@ -43,6 +44,8 @@ Renderer::Renderer() {
   m_reset_height = 50;
   m_credits_x = 5;
   m_credits_y = 750;
+  m_win_x = 400;
+  m_win_y = 20;
 
   m_font.loadFromFile("resources/arial.ttf");
 
@@ -74,13 +77,23 @@ Renderer::Renderer() {
 
   m_credits_text.setFont(m_font);
   m_credits_text.setCharacterSize(13);
-  m_credits_text.setString("Paquito Barco Munoz & Olmo Prieto Sanchez");
+  m_credits_text.setString("Guillermo Barco Munoz & Olmo Prieto Sanchez");
   m_credits_text.setPosition(m_credits_x, m_credits_y);
+
+  m_win_text.setFont(m_font);
+  m_win_text.setCharacterSize(40);
+  m_win_text.setColor(sf::Color::Magenta);
+  m_win_text.setString("WIN\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\t\t  WIN");
+  m_win_text.setPosition(m_win_x, m_win_y);
 }
 
 Renderer::~Renderer() {
   if (m_instance != nullptr) {
     delete m_instance;
+  }
+
+  if (m_grid_ref != nullptr) {
+    delete m_grid_ref;
   }
 }
 
@@ -175,16 +188,19 @@ void Renderer::getInput() {
   if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
     if (mouse_pos.x > m_easy_sudoku_x && mouse_pos.x < m_easy_sudoku_x + m_easy_sudoku_width
       && mouse_pos.y > m_easy_sudoku_y && mouse_pos.y < m_easy_sudoku_y + m_easy_sudoku_height) {
-      
+      delete m_grid_ref;
+      m_grid_ref = new Grid(1);
     } else if (mouse_pos.x > m_medium_sudoku_x && mouse_pos.x < m_medium_sudoku_x + m_medium_sudoku_width
       && mouse_pos.y > m_medium_sudoku_y && mouse_pos.y < m_medium_sudoku_y + m_medium_sudoku_height) {
-      
+      delete m_grid_ref;
+      m_grid_ref = new Grid(2);
     } else if (mouse_pos.x > m_hard_sudoku_x && mouse_pos.x < m_hard_sudoku_x + m_hard_sudoku_width
       && mouse_pos.y > m_hard_sudoku_y && mouse_pos.y < m_hard_sudoku_y + m_hard_sudoku_height) {
-      
+      delete m_grid_ref;
+      m_grid_ref = new Grid(3);
     } else if (mouse_pos.x > m_reset_x && mouse_pos.x < m_reset_x + m_reset_width
       && mouse_pos.y > m_reset_y && mouse_pos.y < m_reset_y + m_reset_height) {
-      
+      m_grid_ref->reset();
     }
   }
   //
@@ -284,6 +300,12 @@ void Renderer::getInput() {
   }
   //
 
+
+  if (m_grid_ref->isTheGameWon() == true) {
+    m_game_won = true;
+  } else {
+    m_game_won = false;
+  }
 }
 
 void Renderer::render() {
@@ -401,6 +423,10 @@ void Renderer::render() {
   m_window.draw(m_reset);
   m_window.draw(m_reset_text);
   m_window.draw(m_credits_text);
+
+  if (m_game_won == true) {
+    m_window.draw(m_win_text);
+  }
 
   m_window.display();
 }

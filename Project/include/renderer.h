@@ -60,9 +60,12 @@ private:
   uint32 m_reset_height;
   uint32 m_credits_x;
   uint32 m_credits_y;
+  uint32 m_win_x;
+  uint32 m_win_y;
   Grid* m_grid_ref;
   short m_selected_box;
   short m_incorrect_box;
+  bool m_game_won;
   Grid::MovementReturnValue m_movement_return_value;
   sf::RenderWindow m_window;
   sf::Sprite m_grid;
@@ -86,6 +89,7 @@ private:
   sf::Text m_hard_sudoku_text;
   sf::Text m_reset_text;
   sf::Text m_credits_text;
+  sf::Text m_win_text;
 };
 
 #endif // __RENDERER_H__
