@@ -130,7 +130,7 @@ void Renderer::getInput() {
       mouse_pos_s += tmp;
       m_debug_text.setString(mouse_pos_s);
 
-      m_selected_box = x_pos + m_width * y_pos;
+      m_selected_box = x_pos + ROWSIZE * y_pos;
     } else {
       m_selected_box = 100;
     }
@@ -171,8 +171,15 @@ void Renderer::render() {
 
   m_window.draw(m_grid);
 
-  m_selected_cell.setPosition(m_grid_offset_x + 4, m_grid_offset_y + 4);
-  m_window.draw(m_selected_cell);
+  if (m_selected_box < 100) {
+    short x, y;
+    m_grid_ref->getMatrixPosition(m_selected_box, x, y);
+
+    m_selected_cell.setPosition(m_grid_offset_x + m_grid_box_size * x + 4,
+      m_grid_offset_y + m_grid_box_size * y + 4);
+    
+    m_window.draw(m_selected_cell);
+  }
 
   m_grid_offset_x += m_number_offset_x;
   m_grid_offset_y += m_number_offset_y;
@@ -199,12 +206,12 @@ void Renderer::render() {
   for (uint32 i = 0; i < 9; i++) {
     for (uint32 j = 0; j < 9; j++) {
       short number = m_grid_ref->getCellNumber(m_grid_ref->getLinealPosition(j, i));
-      //if (number != 0) {
+      if (number != 0) {
         std::string tmp = std::to_string(number);
         text.setString(tmp);
-      //} else {  // number == 0
-      //  text.setString("");
-      //}
+      } else {  // number == 0
+        text.setString("");
+      }
       if (m_grid_ref->isCellFixed(m_grid_ref->getLinealPosition(j, i)) == true) {
         text.setColor(sf::Color::Yellow);
       } else {
@@ -216,7 +223,7 @@ void Renderer::render() {
       }
       
       if (placed_row < 1) {
-        hor_offset += 3;
+        hor_offset += 4;
       } else {
         hor_offset += 1;
       }
@@ -234,7 +241,7 @@ void Renderer::render() {
     }
 
     if (placed_column < 1) {
-      ver_offset += 3;
+      ver_offset += 4;
     } else {
       ver_offset += 1;
     }

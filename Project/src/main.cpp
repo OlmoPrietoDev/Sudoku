@@ -1,14 +1,15 @@
 #include <iostream>
 using namespace std;
-#include "../include/Grid.h"
+#include "Grid.h"
+#include "renderer.h"
 
 int main() {
 
-//  Renderer* renderer = Renderer::getInstance();
-//  renderer->init();
+  Renderer* renderer = Renderer::getInstance();
+  renderer->init();
 
-  Grid * grid = new Grid(4);
-//  renderer->setGrid(grid);
+  Grid * grid = new Grid();
+  renderer->setGrid(grid);
 
 //  grid->insertNumber(10, 5);
 //  grid->insertNumber(10, 5);
@@ -23,14 +24,14 @@ int main() {
 
   grid->printGrid();
 
-//  while (renderer->isOpen()) {
-//    renderer->getInput();
-//    renderer->render();
-//  }
+  while (renderer->isOpen()) {
+    renderer->getInput();
+    renderer->render();
+  }
 
 
   delete grid;
-//  renderer->end();
+  renderer->end();
   
   return 0;
 }
